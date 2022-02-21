@@ -43,9 +43,7 @@ const fileFilter = (req, file, cb) => {
   allowedMimeTypes.includes(file.mimetype) ? cb(null, true) : cb(null, false);
 };
 
-const storage = multer({ storage: diskStorage, fileFilter: fileFilter }).single(
-  'image'
-);
+const storage = multer({ storage: diskStorage, fileFilter: fileFilter }).array("uploads[]", 12);
 
 
 
@@ -64,19 +62,31 @@ app.post(
   '/photos',
   storage,
   async (req, res) => {
+    try {
+    console.log(req)
     const { name } = req.body;
-    const imagePath = 'http://localhost:3000/images/' + req.file.filename; // Note: set path dynamically
-    const profile = new image({
-      name,
-      imagePath,
-    });
-    const createdProfile = await profile.save();
+    console.log(name)
+    console.log(req.files)
+
+    req.files.map(async(file)=>{
+
+      const imagePath = 'http://localhost:3000/images/' + file.filename; // Note: set path dynamically
+      const profile = new image({
+        name,
+        imagePath,
+      });
+     let createdProfile = await profile.save();
+
+    })
+    
     res.status(201).json({
-      profile: {
-        ...createdProfile._doc,
-      },
-    });
-  }
+      message:"pictures saved"
+    })
+    } catch (error) {
+        res.json({message:error})
+    }
+    
+  } 
 )
 
 
