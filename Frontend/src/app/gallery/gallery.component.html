@@ -5,10 +5,12 @@
     <input formControlName="name" type="text" placeholder="Enter name..." />
   </div>
   <div>
-    <input (change)="onFileSelect($event)" type="file" />
+    <input (change)="onFileSelect($event)" type="file" multiple/>
   </div>
-  <div *ngIf="imageData">
-    <img [src]="imageData" [alt]="form.value.name" />
+  <div *ngIf="imagesData?.length > 0">
+    <ng-container *ngFor="let image of imagesData">
+    <img [src]="image" [alt]="form.value.name" />
+  </ng-container>
   </div>
   <div>
     <button type="submit">Create profile</button>

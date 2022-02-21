@@ -13,7 +13,7 @@ export class GalleryComponent implements OnInit {
 
   form: FormGroup;
   profile: Gallery;
-  imageData: string;
+  imagesData: string[]=[];
   filesToUpload: Array<File> = [];
 
   constructor(private myservice:LoginService,private http:HttpClient) { }
@@ -30,18 +30,26 @@ export class GalleryComponent implements OnInit {
     this.filesToUpload = <Array<File>>fileInput.target.files;
     //this.product.photo = fileInput.target.files[0]['name'];
     
-    // console.log((event.target as HTMLInputElement).files.length)
-    // const file = (event.target as HTMLInputElement).files[0];
+    
     // this.form.patchValue({ image: file });
-    // const allowedMimeTypes = ["image/png", "image/jpeg", "image/jpg"];
-    // if (file && allowedMimeTypes.includes(file.type)) {
-    //   const reader = new FileReader();
-    //   reader.onload = () => {
-    //     this.imageData = reader.result as string;
-    //   };
-    //   reader.readAsDataURL(file);
-    // }
-  }
+
+    //preview multiple images
+    
+    for(let i =0; i < this.filesToUpload.length; i++) 
+    {
+
+      const allowedMimeTypes = ["image/png", "image/jpeg", "image/jpg"];
+      if (this.filesToUpload[i] && allowedMimeTypes.includes(this.filesToUpload[i].type)) {
+        const reader = new FileReader();
+        reader.onload = () => {
+      // preview image
+          this.imagesData.push(reader.result as string)
+        };
+        reader.readAsDataURL(this.filesToUpload[i])
+    }}
+
+    }
+  
 
   onSubmit() {
     console.log(this.form.value.name)   
